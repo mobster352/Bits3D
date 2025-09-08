@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://tfbpi1ybvvvt"]
+
+[ext_resource type="Script" uid="uid://cf3ojm6bkolgr" path="res://scenes/entities/player/pause_menu.gd" id="1_ncjbx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_x27ad"]
+font_size = 32
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[node name="PauseMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ncjbx")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "PAUSE"
+label_settings = SubResource("LabelSettings_x27ad")
+horizontal_alignment = 1
+
+[node name="RespawnButton" type="Button" parent="CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "RESTART LEVEL"
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="PauseTimer" type="Timer" parent="Timers"]
+wait_time = 0.1
+autostart = true
+
+[connection signal="pressed" from="CenterContainer/MarginContainer/VBoxContainer/RespawnButton" to="." method="_on_respawn_button_pressed"]
+[connection signal="timeout" from="Timers/PauseTimer" to="." method="_on_pause_timer_timeout"]

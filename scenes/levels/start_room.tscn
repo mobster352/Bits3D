@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://2w6bnx584aff"]
+
+[ext_resource type="PackedScene" uid="uid://dewjwsx7y2v3i" path="res://scenes/levels/level.tscn" id="1_4fuxk"]
+[ext_resource type="PackedScene" uid="uid://b6e7r5twrpoh1" path="res://scenes/entities/enemies/skeleton_minion/skeleton_minion.tscn" id="2_6jifh"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_4fuxk"]
+data = PackedVector3Array(-25, -0.05, 10, -25, -0.05, -10, -25, 0.05, -10, 25, -0.05, -10, -25, -0.05, -10, -25, -0.05, 10, -25, 0.05, -10, -25, -0.05, -10, 25, -0.05, -10, -25, 0.05, -10, -25, 0.05, 10, -25, -0.05, 10, -25, -0.05, 10, -25, 0.05, 10, 25, 0.05, 10, 25, 0.05, 10, -25, 0.05, 10, -25, 0.05, -10, -25, -0.05, 10, 25, -0.05, 10, 25, -0.05, -10, 25, 0.05, 10, 25, -0.05, 10, -25, -0.05, 10, 25, -0.05, -10, 25, -0.05, 10, 25, 0.05, 10, 25, -0.05, -10, 25, 0.05, -10, -25, 0.05, -10, -25, 0.05, -10, 25, 0.05, -10, 25, 0.05, 10, 25, 0.05, 10, 25, 0.05, -10, 25, -0.05, -10)
+
+[node name="StartRoom" instance=ExtResource("1_4fuxk")]
+
+[node name="Skeleton_Minion" parent="Entities" index="1" instance=ExtResource("2_6jifh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.2596, 0, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Environment" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+size = Vector3(50, 0.1, 20)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Environment/CSGBox3D" index="0"]
+
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Environment/CSGBox3D/StaticBody3D" index="0"]
+shape = SubResource("ConcavePolygonShape3D_4fuxk")

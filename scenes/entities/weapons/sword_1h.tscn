@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ct0y73xmu4prs"]
+
+[ext_resource type="PackedScene" uid="uid://c72vbp7mcq4wk" path="res://assets/kay_kit_free/Assets/gltf/sword_1handed.gltf" id="1_f8sbj"]
+[ext_resource type="Script" uid="uid://jb655yh0e2va" path="res://scenes/entities/weapons/sword.gd" id="1_ms1uc"]
+
+[node name="Sword1H" type="Node3D"]
+script = ExtResource("1_ms1uc")
+
+[node name="sword_1handed2" parent="." instance=ExtResource("1_f8sbj")]
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+target_position = Vector3(0, 1.41, 0)
+collision_mask = 4

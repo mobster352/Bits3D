@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ccv8eifatdoil"
+path="res://.godot/imported/Coin_B.obj-4412bd38b67bbf5e202fd321ca70e02b.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Coin_B.obj-4412bd38b67bbf5e202fd321ca70e02b.mesh"]
+
+source_file="res://assets/prototype_bits/Assets/obj/Coin_B.obj"
+dest_files=["res://.godot/imported/Coin_B.obj-4412bd38b67bbf5e202fd321ca70e02b.mesh", "res://.godot/imported/Coin_B.obj-4412bd38b67bbf5e202fd321ca70e02b.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

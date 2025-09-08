@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://rg4em0w2h0x"]
+
+[ext_resource type="Texture2D" uid="uid://clqptox0idhnk" path="res://graphics/ui/bar_color.png" id="1_gpo6t"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_gpo6t"]
+viewport_path = NodePath("SubViewport")
+
+[node name="HealthBar" type="Sprite3D"]
+billboard = 1
+texture = SubResource("ViewportTexture_gpo6t")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(140, 14)
+size_2d_override_stretch = true
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+value = 100.0
+texture_under = ExtResource("1_gpo6t")
+texture_progress = ExtResource("1_gpo6t")
+tint_under = Color(0.14902, 0.14902, 0.14902, 1)
+tint_progress = Color(0.823529, 0, 0, 1)

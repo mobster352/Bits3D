@@ -1,0 +1,94 @@
+[gd_scene load_steps=4 format=3 uid="uid://by7eelq332a0j"]
+
+[ext_resource type="Script" uid="uid://b1v1vakwnoly8" path="res://scenes/entities/player/ui.gd" id="1_rgxe2"]
+[ext_resource type="Texture2D" uid="uid://clqptox0idhnk" path="res://graphics/ui/bar_color.png" id="1_t1uvp"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rgxe2"]
+font_size = 96
+font_color = Color(0.93909, 0, 0.0845047, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+
+[node name="UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rgxe2")
+
+[node name="Stamina" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Stamina"]
+layout_mode = 0
+offset_right = 234.0
+offset_bottom = 77.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 40
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Stamina/MarginContainer"]
+layout_mode = 2
+value = 100.0
+texture_under = ExtResource("1_t1uvp")
+texture_progress = ExtResource("1_t1uvp")
+tint_under = Color(0.147672, 0.147672, 0.147672, 1)
+tint_progress = Color(0, 0.788235, 0, 1)
+
+[node name="Health" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Health"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Health/MarginContainer"]
+layout_mode = 2
+value = 100.0
+texture_under = ExtResource("1_t1uvp")
+texture_progress = ExtResource("1_t1uvp")
+tint_under = Color(0.14902, 0.14902, 0.14902, 1)
+tint_progress = Color(0.821911, 2.62313e-06, 7.70092e-07, 1)
+
+[node name="Death" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Death"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -226.5
+offset_top = -132.0
+offset_right = 226.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Death/CenterContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = -150
+
+[node name="Label" type="Label" parent="Death/CenterContainer/MarginContainer"]
+layout_mode = 2
+text = "YOU DIED"
+label_settings = SubResource("LabelSettings_rgxe2")
+horizontal_alignment = 1

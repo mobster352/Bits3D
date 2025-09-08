@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://du0rygntkj1ju"]
+
+[ext_resource type="PackedScene" uid="uid://c7mo12mtke4l7" path="res://assets/KayKit_Skeletons_1.0_FREE/assets/gltf/Skeleton_Blade.gltf" id="1_tslig"]
+[ext_resource type="Script" uid="uid://ccx10ves56vw5" path="res://scenes/entities/weapons/skeleton_blade.gd" id="2_dwh6c"]
+
+[node name="Skeleton_Blade" instance=ExtResource("1_tslig")]
+script = ExtResource("2_dwh6c")
+
+[node name="RayCast3D" type="RayCast3D" parent="." index="1"]
+target_position = Vector3(0, 1.195, 0)
+collision_mask = 2

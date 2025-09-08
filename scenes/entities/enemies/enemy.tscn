@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://dnnl42gf7n4pb"]
+
+[ext_resource type="Script" uid="uid://ctd8hgwctmg1o" path="res://scenes/entities/enemies/enemy.gd" id="1_yfmsl"]
+
+[node name="Enemy" type="CharacterBody3D"]
+script = ExtResource("1_yfmsl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="AttackTimer" type="Timer" parent="Timers"]
+
+[node name="InvulTimer" type="Timer" parent="Timers"]
+wait_time = 0.8
+one_shot = true
