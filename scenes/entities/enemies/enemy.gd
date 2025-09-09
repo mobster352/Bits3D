@@ -24,6 +24,9 @@ var health := 100:
 			is_dead = true
 			$AnimationTree.set("parameters/DeathOneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 			$CollisionShape3D.disabled = true
+			get_node("Target").hide()
+			remove_from_group("Enemies")
+			Global.target_locked.emit(self, false)
 			health_bar.hide()
 var is_dead := false
 

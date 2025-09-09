@@ -3,6 +3,7 @@ extends CharacterBody3D
 @export var jump_height : float = 2.25
 @export var jump_time_to_peak : float = 0.4
 @export var jump_time_to_descent : float = 0.3
+@export var lock_on_speed := 5.0
 
 @onready var jump_velocity : float = ((2.0 * jump_height) / jump_time_to_peak) * -1.0
 @onready var jump_gravity : float = ((-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)) * -1.0
@@ -60,9 +61,14 @@ var stamina := 100:
 		stamina = clamp(value, 0, 100)
 var is_dead := false
 
+var locked_target: Node3D = null
+@export var lock_on_range: float = 15.0
+@export var lock_on_angle: float = 90.0 # degrees
+
 func _ready() -> void:
 	Input.mouse_mode = Input.MouseMode.MOUSE_MODE_CAPTURED
 	get_tree().paused = false
+	Global.target_locked.connect(_on_target_locked)
 
 
 func _process(delta: float) -> void:
@@ -72,6 +78,7 @@ func _process(delta: float) -> void:
 		jump_logic(delta)
 		ability_logic()
 		move_and_slide()
+		target_lock_logic(delta)
 
 
 func move_logic(delta:float) -> void:
@@ -178,3 +185,85 @@ func _on_stamina_recovery_timer_timeout() -> void:
 func pause_logic() -> void:
 	if Input.is_action_just_pressed("pause"):
 		pause_menu.pause(true)
+
+
+func target_lock_logic(delta:float) -> void:
+	if Input.is_action_just_pressed("target_lock"):
+		toggle_lock_on()
+	if Input.is_action_just_pressed("switch_target"):
+		switch_target()
+	rotate_towards_target(delta)
+
+
+func toggle_lock_on():
+	if locked_target:
+		var target = locked_target
+		Global.target_locked.emit(target, false)
+	else:
+		locked_target = find_nearest_target()
+		if locked_target:
+			var target = locked_target
+			Global.target_locked.emit(target, true)
+
+
+func switch_target():
+	if locked_target:
+		var new_target = find_next_target()
+		if new_target:
+			var target = locked_target
+			Global.target_locked.emit(target, false)
+			locked_target = new_target
+			Global.target_locked.emit(new_target, true)
+
+
+func find_nearest_target() -> Node3D:
+	var nearest: Node3D = null
+	var min_distance = lock_on_range
+	for enemy in get_tree().get_nodes_in_group("Enemies"):
+		var to_enemy = enemy.global_position - global_position
+		var distance = to_enemy.length()
+		if distance <= lock_on_range && distance < min_distance:
+			min_distance = distance
+			nearest = enemy
+	return nearest
+
+
+func find_next_target():
+	var enemies_in_range: Array = []
+	for enemy in get_tree().get_nodes_in_group("Enemies"):
+		var to_enemy = enemy.global_position - global_position
+		var distance = to_enemy.length()
+		if distance <= lock_on_range:
+			enemies_in_range.append({"enemy": enemy})
+	if enemies_in_range.is_empty():
+		return null
+	# Find index of current locked_target
+	var idx = -1
+	for i in enemies_in_range.size():
+		if enemies_in_range[i]["enemy"] == locked_target:
+			idx = i
+			break
+	# Get next target
+	if idx == -1:
+		# If no target is locked yet, pick the first one
+		return enemies_in_range[0]["enemy"]
+	else:
+		# Cycle to next, wrap around
+		var next_idx = (idx + 1) % enemies_in_range.size()
+		return enemies_in_range[next_idx]["enemy"]
+
+
+func rotate_towards_target(_delta: float) -> void:
+	if locked_target:
+		# Look at the marker instead of raw target position
+		var target_pos = locked_target.global_position
+		var to_target: Vector3 = (target_pos - global_position).normalized()
+		var target_basis: Basis = Basis.looking_at(to_target, Vector3.UP)
+		target_basis = target_basis.rotated(Vector3.UP, -PI)
+		skin.basis = target_basis
+		#skin.basis = skin.basis.slerp(target_basis, lock_on_speed * delta)
+
+
+func _on_target_locked(enemy_node: Node3D, is_locked: bool) -> void:
+	if not is_locked and enemy_node and locked_target and enemy_node.name == locked_target.name:
+		locked_target = null

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnax7mhihben4"]
+
+[ext_resource type="Texture2D" uid="uid://bpg1qbucfs87h" path="res://graphics/ui/target.png" id="1_p7bge"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ixbv7"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Target" type="Sprite3D"]
+billboard = 1
+texture = SubResource("ViewportTexture_ixbv7")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(40, 40)
+size_2d_override_stretch = true
+
+[node name="TextureRect" type="TextureRect" parent="SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_p7bge")
+stretch_mode = 3

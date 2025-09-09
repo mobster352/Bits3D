@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ctd8hgwctmg1o" path="res://scenes/entities/enemies/enemy.gd" id="1_yfmsl"]
 
-[node name="Enemy" type="CharacterBody3D"]
+[node name="Enemy" type="CharacterBody3D" groups=["Enemies"]]
 script = ExtResource("1_yfmsl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
