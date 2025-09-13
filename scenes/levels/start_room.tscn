@@ -1,7 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://2w6bnx584aff"]
+[gd_scene load_steps=7 format=3 uid="uid://2w6bnx584aff"]
 
 [ext_resource type="PackedScene" uid="uid://dewjwsx7y2v3i" path="res://scenes/levels/level.tscn" id="1_4fuxk"]
 [ext_resource type="PackedScene" uid="uid://b6e7r5twrpoh1" path="res://scenes/entities/enemies/skeleton_minion/skeleton_minion.tscn" id="2_6jifh"]
+[ext_resource type="PackedScene" uid="uid://dm0l6yxy0o7mx" path="res://scenes/vfx/pickup.tscn" id="3_xv44v"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_xv44v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4lqi8"]
+albedo_texture = SubResource("PlaceholderTexture2D_xv44v")
+albedo_texture_force_srgb = true
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_4fuxk"]
 data = PackedVector3Array(-25, -0.05, 10, -25, -0.05, -10, -25, 0.05, -10, 25, -0.05, -10, -25, -0.05, -10, -25, -0.05, 10, -25, 0.05, -10, -25, -0.05, -10, 25, -0.05, -10, -25, 0.05, -10, -25, 0.05, 10, -25, -0.05, 10, -25, -0.05, 10, -25, 0.05, 10, 25, 0.05, 10, 25, 0.05, 10, -25, 0.05, 10, -25, 0.05, -10, -25, -0.05, 10, 25, -0.05, 10, 25, -0.05, -10, 25, 0.05, 10, 25, -0.05, 10, -25, -0.05, 10, 25, -0.05, -10, 25, -0.05, 10, 25, 0.05, 10, 25, -0.05, -10, 25, 0.05, -10, -25, 0.05, -10, -25, 0.05, -10, 25, 0.05, -10, 25, 0.05, 10, 25, 0.05, 10, 25, 0.05, -10, 25, -0.05, -10)
@@ -16,9 +23,14 @@ transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -17.2987, 0, -7.64657)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Environment" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+material_override = SubResource("StandardMaterial3D_4lqi8")
 size = Vector3(50, 0.1, 20)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Environment/CSGBox3D" index="0"]
 
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Environment/CSGBox3D/StaticBody3D" index="0"]
 shape = SubResource("ConcavePolygonShape3D_4fuxk")
+
+[node name="Pickup" parent="Environment/Items" index="0" instance=ExtResource("3_xv44v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.21926)
+item = 1

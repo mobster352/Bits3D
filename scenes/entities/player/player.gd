@@ -13,6 +13,7 @@ extends CharacterBody3D
 @export var base_speed := 4.0
 @export var run_speed := 6.0
 @export var defend_speed := 2.0
+@export var min_stamina := 20
 var speed_modifier := 1.0
 var stamina_drain_rate := 0.00001
 var time_elapsed := 0.0
@@ -22,6 +23,8 @@ const UPDATE_INTERVAL = 0.02
 @onready var ui = $UI
 @onready var pause_menu = $PauseMenu
 @onready var skin = $skin
+
+@onready var healEffect = $HealEffect
 
 var movement_input := Vector2.ZERO
 var last_movement_input := Vector2(0,1)
@@ -42,7 +45,7 @@ var weapon_active := true:
 var health := 100.0:
 	set(value):
 		ui.update_health(health, value)
-		health = value
+		health = clamp(value, 0.0, 100.0)
 		if health <= 0.0:
 			skin.kill()
 			ui.kill()
@@ -60,10 +63,16 @@ var stamina := 100:
 			#ui.change_stamina_alpha(0.0)
 		stamina = clamp(value, 0, 100)
 var is_dead := false
+var health_potions := 3:
+	set(value):
+		health_potions = clamp(value, 0, 99)
+		ui.update_health_potion(value)
 
 var locked_target: Node3D = null
 @export var lock_on_range: float = 15.0
 @export var lock_on_angle: float = 90.0 # degrees
+
+var target_angle:float
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MouseMode.MOUSE_MODE_CAPTURED
@@ -71,7 +80,7 @@ func _ready() -> void:
 	Global.target_locked.connect(_on_target_locked)
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	pause_logic()
 	if not is_dead:
 		move_logic(delta)
@@ -89,18 +98,22 @@ func move_logic(delta:float) -> void:
 		var speed = run_speed if is_running else base_speed
 		speed = defend_speed if defend else speed
 		
-		vel_2d += movement_input * speed * 8.0 # * delta -- removing acceleration
+		vel_2d += movement_input * speed #* 8.0 # * delta -- removing acceleration
 		vel_2d = vel_2d.limit_length(speed) * speed_modifier
 		velocity.x = vel_2d.x
 		velocity.z = vel_2d.y
-		skin.set_move_state('Running')
-		var target_angle = -movement_input.angle() + PI/2
-		skin.rotation.y = rotate_toward(skin.rotation.y, target_angle, 10.0 * delta)
+		if is_running:
+			skin.set_move_state('Running')
+		else:
+			skin.set_move_state('Walking')
+		target_angle = -movement_input.angle() + PI/2
 	else:
 		vel_2d = vel_2d.move_toward(Vector2.ZERO, base_speed * 4.0 )#* delta)
 		velocity.x = vel_2d.x
 		velocity.z = vel_2d.y
 		skin.set_move_state('Idle')
+	if skin.rotation.y != target_angle:
+		skin.rotation.y = rotate_toward(skin.rotation.y, target_angle, 10 * delta)
 	if movement_input:
 		last_movement_input = movement_input.normalized()
 	
@@ -123,10 +136,10 @@ func move_logic(delta:float) -> void:
 
 func jump_logic(delta:float) -> void:
 	if is_on_floor():
-		if Input.is_action_just_pressed("jump") and stamina >= 20:
+		if Input.is_action_just_pressed("jump") and stamina >= min_stamina:
 			velocity.y = -jump_velocity
 			do_squash_and_stretch(1.2, 0.15)
-			stamina -= 20
+			stamina -= min_stamina
 	else:
 		skin.set_move_state('Jump')
 	var gravity = jump_gravity if velocity.y > 0.0 else fall_gravity
@@ -135,7 +148,7 @@ func jump_logic(delta:float) -> void:
 
 func ability_logic() -> void:
 	#actual attack
-	if Input.is_action_just_pressed("ability") and stamina >= 20:
+	if Input.is_action_just_pressed("ability") and stamina >= min_stamina:
 		#if weapon_active:
 		stamina = skin.attack(stamina)
 		#else:
@@ -145,7 +158,7 @@ func ability_logic() -> void:
 				#energy -= 20
 	
 	#defend
-	defend = Input.is_action_pressed("block")
+	defend = Input.is_action_pressed("block") and stamina > min_stamina
 	
 	#switch weapon/magic
 	#if Input.is_action_just_pressed("switch weapon") and not skin.attacking:
@@ -156,6 +169,11 @@ func ability_logic() -> void:
 	#if Input.is_action_just_pressed("switch spell") and not skin.attacking and not weapon_active:
 		#current_spell = spells[spells.keys()[(int(current_spell) + 1) % len(spells)]]
 		#ui.update_spell(spells, current_spell)
+		
+	if Input.is_action_just_pressed("heal") and health_potions > 0:
+		health += 20
+		health_potions -= 1
+		healEffect.get_node("GPUParticles3D").emitting = true
 
 
 func stop_movement(start_duration:float, end_duration:float) -> void:
@@ -166,10 +184,15 @@ func stop_movement(start_duration:float, end_duration:float) -> void:
 
 func hit() -> void:
 	if not $Timers/InvulTimer.time_left:
-		skin.hit()
-		stop_movement(0.3,0.3)
-		health -= 20.0
-		$Timers/InvulTimer.start()
+		if defend and stamina >= min_stamina:
+			stamina -= min_stamina
+			stop_movement(0.3,0.3)
+			$Timers/InvulTimer.start()
+		else:
+			skin.hit()
+			stop_movement(0.3,0.3)
+			health -= 20.0
+			$Timers/InvulTimer.start()
 
 
 func do_squash_and_stretch(value: float, duration: float = 0.1) -> void:
@@ -179,7 +202,8 @@ func do_squash_and_stretch(value: float, duration: float = 0.1) -> void:
 
 
 func _on_stamina_recovery_timer_timeout() -> void:
-	stamina += 1
+	if not defend:
+		stamina += 1
 
 
 func pause_logic() -> void:
@@ -267,3 +291,7 @@ func rotate_towards_target(_delta: float) -> void:
 func _on_target_locked(enemy_node: Node3D, is_locked: bool) -> void:
 	if not is_locked and enemy_node and locked_target and enemy_node.name == locked_target.name:
 		locked_target = null
+
+
+func pickup_health_potion(value:int) -> void:
+	health_potions += value

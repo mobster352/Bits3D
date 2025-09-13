@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://do1jkbicnvdph"]
+
+[ext_resource type="PackedScene" uid="uid://dewjwsx7y2v3i" path="res://scenes/levels/level.tscn" id="1_x6ivy"]
+[ext_resource type="MeshLibrary" uid="uid://c5vq6ms08qat" path="res://scenes/levels/dungeon_tiles.tres" id="2_4tcl0"]
+
+[node name="Level1" instance=ExtResource("1_x6ivy")]
+
+[node name="FloorGrid" type="GridMap" parent="Environment" index="2"]
+mesh_library = ExtResource("2_4tcl0")
+cell_size = Vector3(4, 2, 4)
+metadata/_editor_floor_ = Vector3(0, -1, 0)
+
+[node name="WallGrid" type="GridMap" parent="Environment" index="3"]
+mesh_library = ExtResource("2_4tcl0")
+cell_size = Vector3(4, 2, 4)
+cell_center_z = false
+metadata/_editor_floor_ = Vector3(0, -1, 0)

@@ -5,6 +5,7 @@ extends Control
 #@onready var energy_bar = $Energy/MarginContainer/TextureProgressBar
 @onready var health_bar = $Health/MarginContainer/TextureProgressBar
 @onready var stamina_bar = $Stamina/MarginContainer/TextureProgressBar
+@onready var health_potions_count = $HealthPotions/MarginContainer/Count
 #var heart_scene: PackedScene = preload("res://scenes/entities/player/heart.tscn")
 #var fire_texture = preload("res://graphics/ui/fire.png")
 #var heal_texture = preload("res://graphics/ui/heal.png")
@@ -43,6 +44,9 @@ func update_health(current:int, target:int) -> void:
 
 func _change_health(value:int) -> void:
 	health_bar.value = value
+	
+func update_health_potion(value:int) -> void:
+	health_potions_count.text = str(clamp(value, 0, 99))
 
 #
 #func update_spell(spells, current_spell) -> void:
