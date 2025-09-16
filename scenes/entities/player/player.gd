@@ -25,6 +25,7 @@ const UPDATE_INTERVAL = 0.02
 @onready var skin = $skin
 
 @onready var healEffect = $HealEffect
+@onready var dodge_timer = $Timers/DodgeTimer
 
 var movement_input := Vector2.ZERO
 var last_movement_input := Vector2(0,1)
@@ -50,6 +51,7 @@ var health := 100.0:
 			skin.kill()
 			ui.kill()
 			is_dead = true
+			call_deferred("_kill_player")
 #var energy := 100:
 	#set(value):
 		#energy = min(100, value)
@@ -71,6 +73,7 @@ var health_potions := 3:
 var locked_target: Node3D = null
 @export var lock_on_range: float = 15.0
 @export var lock_on_angle: float = 90.0 # degrees
+@export var dodge_speed := 60.0
 
 var target_angle:float
 
@@ -91,10 +94,11 @@ func _physics_process(delta: float) -> void:
 
 
 func move_logic(delta:float) -> void:
-	movement_input = Input.get_vector("left", "right", "forward", "backward").rotated(-camera.global_rotation.y)
+	var dir_input =  Input.get_vector("left", "right", "forward", "backward")
+	movement_input = dir_input.rotated(-camera.global_rotation.y)
 	var vel_2d = Vector2(velocity.x, velocity.z)
 	var is_running = Input.is_action_pressed("run") && stamina > 0
-	if movement_input !=  Vector2.ZERO:
+	if movement_input !=  Vector2.ZERO and not dodge_timer.time_left:
 		var speed = run_speed if is_running else base_speed
 		speed = defend_speed if defend else speed
 		
@@ -132,7 +136,40 @@ func move_logic(delta:float) -> void:
 			#$Sounds/StepSound.playing = true
 	#else:
 		#$Sounds/StepSound.playing = false
-
+		
+	if Input.is_action_just_pressed("dodge") and stamina > min_stamina and not dodge_timer.time_left:
+		stamina -= min_stamina
+		skin.dodge()
+		var tween = create_tween()
+		tween.set_parallel()
+		var dir = round(dir_input)
+		if locked_target:
+			if dir == Vector2.ZERO:
+				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+			if dir == Vector2.LEFT:
+				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
+			if dir == Vector2.RIGHT:
+				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
+			if dir == Vector2.UP:
+				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
+			if dir == Vector2.DOWN:
+				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+			if dir == Vector2(-1,-1):#up left
+				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
+				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
+			if dir == Vector2(1,-1):#up right
+				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
+				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
+			if dir == Vector2(-1,1):#back left
+				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
+				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+			if dir == Vector2(1,1):#back right
+				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
+				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+		else:
+			tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
+		dodge_timer.start()
+		#velocity = skin.transform.basis.z * dodge_speed
 
 func jump_logic(delta:float) -> void:
 	if is_on_floor():
@@ -174,6 +211,7 @@ func ability_logic() -> void:
 		health += 20
 		health_potions -= 1
 		healEffect.get_node("GPUParticles3D").emitting = true
+		
 
 
 func stop_movement(start_duration:float, end_duration:float) -> void:
@@ -295,3 +333,7 @@ func _on_target_locked(enemy_node: Node3D, is_locked: bool) -> void:
 
 func pickup_health_potion(value:int) -> void:
 	health_potions += value
+
+
+func _kill_player() -> void:
+	$CollisionShape3D.disabled = true

@@ -11,8 +11,7 @@ signal cast_spell(type:String, pos:Vector3, direction:Vector2, size:float)
 @onready var skin = get_node('skin')
 @onready var health_bar = $HealthBar/SubViewport/TextureProgressBar
 
-@export var walk_speed := 2.0
-@export var speed = walk_speed
+@export var speed = 2.0
 var speed_modifier := 1.0
 @export var notice_radius := 30.0
 @export var attack_radius := 3.0
