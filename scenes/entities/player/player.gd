@@ -13,9 +13,13 @@ extends CharacterBody3D
 @export var base_speed := 4.0
 @export var run_speed := 6.0
 @export var defend_speed := 2.0
-@export var min_stamina := 20
+@export var backwards_speed := 4.0
+@export var dodge_speed := 60.0
+
+@export var min_stamina := 20.0
+@export var dodge_stamina := 10.0
 var speed_modifier := 1.0
-var stamina_drain_rate := 0.00001
+var stamina_drain_rate := 40
 var time_elapsed := 0.0
 const UPDATE_INTERVAL = 0.02
 
@@ -55,15 +59,15 @@ var health := 100.0:
 #var energy := 100:
 	#set(value):
 		#energy = min(100, value)
-		##ui.update_energy(energy)
-var stamina := 100:
+		#ui.update_energy(energy)
+var stamina := 100.0:
 	set(value):
 		ui.update_stamina(stamina, value)
 		#if stamina == 100 and value < 100:
 			#ui.change_stamina_alpha(1.0)
 		#if value == 100:
 			#ui.change_stamina_alpha(0.0)
-		stamina = clamp(value, 0, 100)
+		stamina = clamp(value, 0.0, 100.0)
 var is_dead := false
 var health_potions := 3:
 	set(value):
@@ -73,9 +77,15 @@ var health_potions := 3:
 var locked_target: Node3D = null
 @export var lock_on_range: float = 15.0
 @export var lock_on_angle: float = 90.0 # degrees
-@export var dodge_speed := 60.0
 
 var target_angle:float
+
+const VECTOR2_UP_LEFT = Vector2(-1,-1)
+const VECTOR2_UP_RIGHT = Vector2(1,-1)
+const VECTOR2_DOWN_LEFT = Vector2(-1,1)
+const VECTOR2_DOWN_RIGHT = Vector2(1,1)
+
+var is_paused := false
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MouseMode.MOUSE_MODE_CAPTURED
@@ -95,21 +105,36 @@ func _physics_process(delta: float) -> void:
 
 func move_logic(delta:float) -> void:
 	var dir_input =  Input.get_vector("left", "right", "forward", "backward")
+	var dir = round(dir_input)
 	movement_input = dir_input.rotated(-camera.global_rotation.y)
 	var vel_2d = Vector2(velocity.x, velocity.z)
-	var is_running = Input.is_action_pressed("run") && stamina > 0
+	var is_running = Input.is_action_pressed("run") && stamina > 0.0
 	if movement_input !=  Vector2.ZERO and not dodge_timer.time_left:
 		var speed = run_speed if is_running else base_speed
 		speed = defend_speed if defend else speed
+		speed = backwards_speed if (dir == Vector2.DOWN or dir == VECTOR2_DOWN_LEFT or dir == VECTOR2_DOWN_RIGHT) and locked_target else speed
 		
 		vel_2d += movement_input * speed #* 8.0 # * delta -- removing acceleration
 		vel_2d = vel_2d.limit_length(speed) * speed_modifier
 		velocity.x = vel_2d.x
 		velocity.z = vel_2d.y
-		if is_running:
+		
+		if is_running and not locked_target:
+			skin.set_move_state('Running')
+		elif is_running and locked_target and dir == Vector2.UP:
 			skin.set_move_state('Running')
 		else:
-			skin.set_move_state('Walking')
+			if locked_target:
+				if dir == Vector2.DOWN or dir == VECTOR2_DOWN_LEFT or dir == VECTOR2_DOWN_RIGHT:
+					skin.set_move_state('Walking_Backwards')
+				elif dir == Vector2.LEFT or dir == VECTOR2_UP_LEFT:
+					skin.set_move_state('Running_Strafe_Left')
+				elif dir == Vector2.RIGHT or dir == VECTOR2_UP_RIGHT:
+					skin.set_move_state('Running_Strafe_Right')
+				else:
+					skin.set_move_state('Walking')
+			else:
+				skin.set_move_state('Walking')
 		target_angle = -movement_input.angle() + PI/2
 	else:
 		vel_2d = vel_2d.move_toward(Vector2.ZERO, base_speed * 4.0 )#* delta)
@@ -126,10 +151,12 @@ func move_logic(delta:float) -> void:
 		time_elapsed -= UPDATE_INTERVAL
 		@warning_ignore("narrowing_conversion")
 		stamina -= stamina_drain_rate * delta
-		stamina = clamp(stamina, 0, 100)
+		$Timers/StaminaRecoveryTimer.paused = true
 	else:
 		time_elapsed += delta
 		time_elapsed = clamp(time_elapsed, 0.0, UPDATE_INTERVAL)
+	if not is_currently_running:
+		$Timers/StaminaRecoveryTimer.paused = false
 	#run_particles.emitting = is_currently_running
 	#if is_on_floor() and movement_input:
 		#if not $Sounds/StepSound.playing:
@@ -138,11 +165,10 @@ func move_logic(delta:float) -> void:
 		#$Sounds/StepSound.playing = false
 		
 	if Input.is_action_just_pressed("dodge") and stamina > min_stamina and not dodge_timer.time_left:
-		stamina -= min_stamina
+		stamina -= dodge_stamina
 		skin.dodge()
 		var tween = create_tween()
 		tween.set_parallel()
-		var dir = round(dir_input)
 		if locked_target:
 			if dir == Vector2.ZERO:
 				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
@@ -154,16 +180,16 @@ func move_logic(delta:float) -> void:
 				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
 			if dir == Vector2.DOWN:
 				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == Vector2(-1,-1):#up left
+			if dir == VECTOR2_UP_LEFT:
 				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
 				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == Vector2(1,-1):#up right
+			if dir == VECTOR2_UP_LEFT:
 				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
 				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == Vector2(-1,1):#back left
+			if dir == VECTOR2_DOWN_LEFT:
 				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
 				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == Vector2(1,1):#back right
+			if dir == VECTOR2_DOWN_RIGHT:
 				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
 				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
 		else:
@@ -176,7 +202,7 @@ func jump_logic(delta:float) -> void:
 		if Input.is_action_just_pressed("jump") and stamina >= min_stamina:
 			velocity.y = -jump_velocity
 			do_squash_and_stretch(1.2, 0.15)
-			stamina -= min_stamina
+			stamina -= 10.0
 	else:
 		skin.set_move_state('Jump')
 	var gravity = jump_gravity if velocity.y > 0.0 else fall_gravity
@@ -207,11 +233,12 @@ func ability_logic() -> void:
 		#current_spell = spells[spells.keys()[(int(current_spell) + 1) % len(spells)]]
 		#ui.update_spell(spells, current_spell)
 		
-	if Input.is_action_just_pressed("heal") and health_potions > 0:
-		health += 20
+	if Input.is_action_just_pressed("heal") and health_potions > 0 and not $Timers/HealTimer.time_left:
+		health += 50
 		health_potions -= 1
 		healEffect.get_node("GPUParticles3D").emitting = true
-		
+		$Timers/HealTimer.start()
+
 
 
 func stop_movement(start_duration:float, end_duration:float) -> void:
@@ -220,7 +247,7 @@ func stop_movement(start_duration:float, end_duration:float) -> void:
 	tween.tween_property(self, "speed_modifier", 1.0, end_duration)
 
 
-func hit() -> void:
+func hit(value:float) -> void:
 	if not $Timers/InvulTimer.time_left:
 		if defend and stamina >= min_stamina:
 			stamina -= min_stamina
@@ -229,7 +256,7 @@ func hit() -> void:
 		else:
 			skin.hit()
 			stop_movement(0.3,0.3)
-			health -= 20.0
+			health -= value
 			$Timers/InvulTimer.start()
 
 
@@ -241,12 +268,14 @@ func do_squash_and_stretch(value: float, duration: float = 0.1) -> void:
 
 func _on_stamina_recovery_timer_timeout() -> void:
 	if not defend:
-		stamina += 1
+		stamina += 1.2
+	else:
+		stamina += 0.25
 
 
 func pause_logic() -> void:
 	if Input.is_action_just_pressed("pause"):
-		pause_menu.pause(true)
+		pause_menu.pause_game()
 
 
 func target_lock_logic(delta:float) -> void:

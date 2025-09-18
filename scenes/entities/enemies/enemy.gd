@@ -15,7 +15,10 @@ signal cast_spell(type:String, pos:Vector3, direction:Vector2, size:float)
 var speed_modifier := 1.0
 @export var notice_radius := 30.0
 @export var attack_radius := 3.0
-var health := 100:
+@export var loot:Global.ITEMS
+@export var loot_chance := 1.0
+@onready var pickup := preload("res://scenes/vfx/pickup.tscn").instantiate()
+@export var health := 100:
 	set(value):
 		update_health(health, value)
 		health = value
@@ -27,6 +30,11 @@ var health := 100:
 			remove_from_group("Enemies")
 			Global.target_locked.emit(self, false)
 			health_bar.hide()
+			var spawn_loot = randf() < loot_chance
+			if spawn_loot:
+				pickup.item = loot
+				get_parent().add_child(pickup)
+				pickup.position = position
 var is_dead := false
 
 var rng = RandomNumberGenerator.new()
@@ -35,6 +43,7 @@ var squash_and_stretch := 1.0:
 		squash_and_stretch = value
 		var negative = 1.0 + (1.0 - squash_and_stretch)
 		skin.scale = Vector3(negative,squash_and_stretch,negative)
+
 
 func move_to_player(delta:float):
 	if position.distance_to(player.position) < notice_radius && not player.is_dead && not is_dead:

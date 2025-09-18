@@ -27,12 +27,12 @@ func _process(_delta: float) -> void:
 	pass
 
 
-func attack(stamina:int) -> int:
+func attack(stamina:float) -> int:
 	if not attacking and not is_hit:
 		attack_state_machine.travel('1H_Diagonal')
 		$AnimationTree.set("parameters/AttackOneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 		#get_parent().get_node("Sounds/SwordSound").play()
-		return stamina - 20
+		return stamina - 20.0
 	return stamina
 
 
@@ -77,3 +77,4 @@ func dodge() -> void:
 	$AnimationTree.set("parameters/ExtraOneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	$AnimationTree.set("parameters/AttackOneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_ABORT)
 	attacking = false
+	is_hit = false

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Bits3D"
-run/main_scene="uid://2w6bnx584aff"
+run/main_scene="uid://lf6ws3r2n64f"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -23,6 +23,7 @@ Global="*res://scenes/entities/player/global.gd"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/size/mode=3
 
 [input]
 

@@ -95,7 +95,7 @@ offset_top = -121.0
 offset_right = 362.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/margin_bottom = 50
+theme_override_constants/margin_bottom = 100
 
 [node name="Panel" type="Panel" parent="PickupUI/MarginContainer"]
 layout_mode = 2
@@ -127,7 +127,7 @@ offset_top = -121.0
 offset_right = 362.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/margin_bottom = 50
+theme_override_constants/margin_bottom = 100
 
 [node name="Panel" type="Panel" parent="ItemPickedUpUI/MarginContainer"]
 layout_mode = 2

@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1plg7akcrwd"]
+
+[ext_resource type="Script" uid="uid://b42wxmcvrh4ai" path="res://scenes/levels/editable_input.gd" id="1_h2mo5"]
+
+[node name="EditableInput" type="LineEdit"]
+offset_right = 68.5625
+offset_bottom = 31.0
+alignment = 1
+context_menu_enabled = false
+emoji_menu_enabled = false
+virtual_keyboard_enabled = false
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
+caret_blink = true
+caret_blink_interval = 0.4
+script = ExtResource("1_h2mo5")
+
+[connection signal="text_changed" from="." to="." method="_on_text_changed"]

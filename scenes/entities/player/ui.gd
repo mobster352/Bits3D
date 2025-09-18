@@ -58,11 +58,11 @@ func update_health_potion(value:int) -> void:
 #func update_energy(value:int) -> void:
 	#energy_bar.value = value
 
-func update_stamina(current:int, target:int) -> void:
+func update_stamina(current:float, target:float) -> void:
 	var tween = create_tween()
 	tween.tween_method(_change_stamina, current, target, 0.25)
 
-func _change_stamina(value:int) -> void:
+func _change_stamina(value:float) -> void:
 	stamina_bar.value = value
 
 func change_stamina_alpha(value:float) -> void:

@@ -42,7 +42,8 @@ size = Vector2(0.25, 0.25)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 emitting = false
-amount = 50
+amount = 100
+lifetime = 0.5
 one_shot = true
 fixed_fps = 15
 local_coords = true

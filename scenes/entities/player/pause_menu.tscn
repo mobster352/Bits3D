@@ -1,13 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://tfbpi1ybvvvt"]
+[gd_scene load_steps=4 format=3 uid="uid://tfbpi1ybvvvt"]
 
 [ext_resource type="Script" uid="uid://cf3ojm6bkolgr" path="res://scenes/entities/player/pause_menu.gd" id="1_ncjbx"]
+[ext_resource type="PackedScene" uid="uid://crudshhqiyedq" path="res://scenes/levels/options_menu.tscn" id="2_ryv1k"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_x27ad"]
-font_size = 32
-outline_size = 1
+[sub_resource type="LabelSettings" id="LabelSettings_ryv1k"]
+font_size = 64
+outline_size = 2
 outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
 
-[node name="PauseMenu" type="Control"]
+[node name="PauseMenu" type="Control" node_paths=PackedStringArray("menu", "options")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,39 +17,82 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ncjbx")
+menu = NodePath("PanelContainer")
+options = NodePath("OptionsMenu")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = -1
+anchor_left = 0.3
+anchor_right = 0.7
 anchor_bottom = 1.0
+offset_right = -6.10352e-05
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="CenterContainer/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CenterContainer/MarginContainer"]
 layout_mode = 2
-text = "PAUSE"
-label_settings = SubResource("LabelSettings_x27ad")
-horizontal_alignment = 1
+theme_override_constants/separation = 15
 
-[node name="RespawnButton" type="Button" parent="CenterContainer/MarginContainer/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="PanelContainer/CenterContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "RESTART LEVEL"
+text = "Resume"
+
+[node name="RespawnButton" type="Button" parent="PanelContainer/CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Restart"
+
+[node name="OptionsButton" type="Button" parent="PanelContainer/CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Options"
+
+[node name="MainMenuButton" type="Button" parent="PanelContainer/CenterContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Main Menu"
+
+[node name="Control" type="Control" parent="PanelContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="PanelContainer/Control"]
+layout_mode = 2
+anchor_top = 0.103
+anchor_right = 1.0
+anchor_bottom = 0.224
+offset_top = 0.207996
+offset_bottom = 0.0639954
+text = "PAUSE"
+label_settings = SubResource("LabelSettings_ryv1k")
+horizontal_alignment = 1
+
+[node name="OptionsMenu" parent="." node_paths=PackedStringArray("sibling") instance=ExtResource("2_ryv1k")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+sibling = NodePath("../PanelContainer")
 
 [node name="Timers" type="Node" parent="."]
 
 [node name="PauseTimer" type="Timer" parent="Timers"]
 wait_time = 0.1
-autostart = true
+one_shot = true
 
-[connection signal="pressed" from="CenterContainer/MarginContainer/VBoxContainer/RespawnButton" to="." method="_on_respawn_button_pressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/MarginContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/MarginContainer/VBoxContainer/RespawnButton" to="." method="_on_respawn_button_pressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/MarginContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="PanelContainer/CenterContainer/MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
 [connection signal="timeout" from="Timers/PauseTimer" to="." method="_on_pause_timer_timeout"]

@@ -6,4 +6,4 @@ func _process(_delta: float) -> void:
 	if can_damage:
 		var collider = $RayCast3D.get_collider()
 		if collider and 'hit' in collider:
-			collider.hit()
+			collider.hit(15)

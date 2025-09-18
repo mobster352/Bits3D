@@ -4,6 +4,7 @@ extends Enemy
 @onready var target = $Target
 
 func _ready() -> void:
+	health_bar.max_value = health
 	Global.target_locked.connect(_on_target_locked)
 
 func _physics_process(delta: float) -> void:
