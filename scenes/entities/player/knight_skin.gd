@@ -27,7 +27,7 @@ func _process(_delta: float) -> void:
 	pass
 
 
-func attack(stamina:float) -> int:
+func attack(stamina:float) -> float:
 	if not attacking and not is_hit:
 		attack_state_machine.travel('1H_Diagonal')
 		$AnimationTree.set("parameters/AttackOneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)

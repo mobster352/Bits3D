@@ -22,3 +22,4 @@ func _on_text_changed(new_text: String) -> void:
 		text = str(new_float)
 		h_slider.value = new_float
 	caret_column = new_text.length()
+	

@@ -4,14 +4,16 @@ extends Node3D
 @export var max_limit_x: float
 @export var horizontal_acceleration := 2.0
 @export var vertical_acceleration := 1.0
-@export var mouse_acceleration := 0.005
+@onready var mouse_acceleration := 0.005
 @export var lock_on_speed := 5.0
 
 var has_target := false
 var target_marker: Node3D
 
 func _ready() -> void:
+	mouse_acceleration = Global.load_keybinding("mouse_sensitivity")
 	Global.target_locked.connect(_on_target_locked)
+	Global.update_keybinding.connect(_on_update_keybinding)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and not has_target:
@@ -43,3 +45,8 @@ func _on_target_locked(enemy_node: Node3D, is_locked: bool) -> void:
 			target_marker = enemy_node
 	else:
 		target_marker = null
+
+
+func _on_update_keybinding(key:String,value:Variant) -> void:
+	if key == "mouse_sensitivity":
+		mouse_acceleration = value

@@ -73,7 +73,7 @@ text = "Start Game"
 [node name="OptionsButton" type="Button" parent="Menu/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Options"
+text = "Settings"
 
 [node name="QuitButton" type="Button" parent="Menu/MarginContainer2/VBoxContainer"]
 layout_mode = 2
@@ -83,7 +83,6 @@ text = "Quit Game"
 [node name="OptionsMenu" parent="." instance=ExtResource("2_geflf")]
 visible = false
 layout_mode = 1
-anchors_preset = 15
 
 [node name="Node3D" type="Node3D" parent="."]
 

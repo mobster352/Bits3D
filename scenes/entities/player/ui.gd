@@ -10,6 +10,9 @@ extends Control
 #var fire_texture = preload("res://graphics/ui/fire.png")
 #var heal_texture = preload("res://graphics/ui/heal.png")
 
+func _ready() -> void:
+	Global.update_keybinding.connect(_on_update_keybinding)
+
 #func setup(value:int) -> void:
 	#for i in value:
 		#var heart = heart_scene.instantiate()
@@ -75,3 +78,8 @@ func _change_alpha(value:float) -> void:
 
 func kill() -> void:
 	$Death.show()
+
+
+func _on_update_keybinding(key:String,value:Variant) -> void:
+	if key == "heal":
+		$HealthPotions/MarginContainer/KeyPress.text = value

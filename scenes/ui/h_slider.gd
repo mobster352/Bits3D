@@ -4,6 +4,7 @@ extends HSlider
 
 
 func _ready() -> void:
+	value = Global.load_keybinding("mouse_sensitivity")
 	line_edit.text = str(value)
 
 @warning_ignore("shadowed_variable_base_class")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://crudshhqiyedq"]
+[gd_scene load_steps=7 format=3 uid="uid://crudshhqiyedq"]
 
 [ext_resource type="PackedScene" uid="uid://d1plg7akcrwd" path="res://scenes/ui/editable_input.tscn" id="1_h0pwd"]
 [ext_resource type="Script" uid="uid://56kg7cclof37" path="res://scenes/ui/h_slider.gd" id="1_ia2c6"]
@@ -12,6 +12,12 @@ shadow_size = 2
 
 [sub_resource type="LabelSettings" id="LabelSettings_fpoqm"]
 font_size = 24
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_wprjq"]
+font_size = 12
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 shadow_size = 2
@@ -42,7 +48,7 @@ theme_override_constants/margin_top = 10
 
 [node name="Label" type="Label" parent="PanelContainer2/MarginContainer2"]
 layout_mode = 2
-text = "Options"
+text = "Settings"
 label_settings = SubResource("LabelSettings_h0pwd")
 horizontal_alignment = 1
 
@@ -105,9 +111,9 @@ max_value = 0.01
 step = 0.001
 value = 0.005
 script = ExtResource("1_ia2c6")
-line_edit = NodePath("../EditableInput")
+line_edit = NodePath("../MouseSensitivityInput")
 
-[node name="EditableInput" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/MouseSensitivity" node_paths=PackedStringArray("h_slider") instance=ExtResource("1_h0pwd")]
+[node name="MouseSensitivityInput" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/MouseSensitivity" node_paths=PackedStringArray("h_slider") instance=ExtResource("1_h0pwd")]
 layout_mode = 0
 offset_left = 353.0
 offset_top = -17.0
@@ -115,6 +121,7 @@ offset_right = 421.563
 offset_bottom = 14.0
 text = "0.0"
 max_length = 5
+editable = false
 h_slider = NodePath("../HSlider")
 
 [node name="Heal" type="Control" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -124,24 +131,168 @@ size_flags_vertical = 8
 
 [node name="Label" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Heal"]
 layout_mode = 2
-offset_left = 28.0
-offset_top = -8.0
-offset_right = 84.0
-offset_bottom = 26.0
+offset_left = 33.0
+offset_top = -3.0
+offset_right = 85.0
+offset_bottom = 31.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "Heal"
 label_settings = SubResource("LabelSettings_fpoqm")
 
-[node name="EditableInput" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Heal" instance=ExtResource("1_h0pwd")]
+[node name="HealButton" type="Button" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Heal"]
 layout_mode = 0
 offset_left = 105.0
-offset_top = -3.0
-offset_right = 173.563
-offset_bottom = 28.0
+offset_top = 3.0
+offset_right = 169.0
+offset_bottom = 35.0
 text = "R"
-max_length = 1
-type = 2
+
+[node name="Tooltip" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Heal"]
+visible = false
+layout_mode = 0
+offset_left = 185.0
+offset_top = 11.0
+offset_right = 401.0
+offset_bottom = 37.0
+text = "Press a key to bind 'Heal'"
+label_settings = SubResource("LabelSettings_wprjq")
+
+[node name="Dodge" type="Control" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Dodge"]
+layout_mode = 2
+offset_left = 17.0
+offset_top = 3.0
+offset_right = 91.0
+offset_bottom = 37.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Dodge"
+label_settings = SubResource("LabelSettings_fpoqm")
+
+[node name="DodgeButton" type="Button" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Dodge"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 3.0
+offset_right = 169.0
+offset_bottom = 35.0
+text = "Alt"
+
+[node name="Tooltip" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Dodge"]
+visible = false
+layout_mode = 0
+offset_left = 185.0
+offset_top = 11.0
+offset_right = 401.0
+offset_bottom = 37.0
+text = "Press a key to bind 'Dodge'"
+label_settings = SubResource("LabelSettings_wprjq")
+
+[node name="Jump" type="Control" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Jump"]
+layout_mode = 2
+offset_left = 25.0
+offset_top = 1.0
+offset_right = 85.0
+offset_bottom = 35.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Jump"
+label_settings = SubResource("LabelSettings_fpoqm")
+
+[node name="JumpButton" type="Button" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Jump"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 3.0
+offset_right = 169.0
+offset_bottom = 35.0
+text = "Space"
+
+[node name="Tooltip" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Jump"]
+visible = false
+layout_mode = 0
+offset_left = 185.0
+offset_top = 11.0
+offset_right = 401.0
+offset_bottom = 37.0
+text = "Press a key to bind 'Jump'"
+label_settings = SubResource("LabelSettings_wprjq")
+
+[node name="TargetLock" type="Control" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/TargetLock"]
+layout_mode = 2
+offset_left = -39.0
+offset_top = 1.0
+offset_right = 95.0
+offset_bottom = 35.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Target Lock"
+label_settings = SubResource("LabelSettings_fpoqm")
+
+[node name="TargetLockButton" type="Button" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/TargetLock"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 1.0
+offset_right = 169.0
+offset_bottom = 33.0
+text = "Q"
+
+[node name="Tooltip" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/TargetLock"]
+visible = false
+layout_mode = 0
+offset_left = 185.0
+offset_top = 11.0
+offset_right = 401.0
+offset_bottom = 37.0
+text = "Press a key to bind 'Target Lock'"
+label_settings = SubResource("LabelSettings_wprjq")
+
+[node name="SwitchTarget" type="Control" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/SwitchTarget"]
+layout_mode = 2
+offset_left = -63.0
+offset_top = -1.0
+offset_right = 94.0
+offset_bottom = 33.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Switch Target"
+label_settings = SubResource("LabelSettings_fpoqm")
+
+[node name="SwitchTargetButton" type="Button" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/SwitchTarget"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 1.0
+offset_right = 169.0
+offset_bottom = 33.0
+text = "Tab"
+
+[node name="Tooltip" type="Label" parent="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/SwitchTarget"]
+visible = false
+layout_mode = 0
+offset_left = 185.0
+offset_top = 11.0
+offset_right = 401.0
+offset_bottom = 37.0
+text = "Press a key to bind 'Switch Target'"
+label_settings = SubResource("LabelSettings_wprjq")
 
 [node name="PanelContainer3" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -168,5 +319,12 @@ text = "BACK"
 layout_mode = 2
 text = "APPLY"
 
+[connection signal="value_changed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/MouseSensitivity/HSlider" to="." method="_on_h_slider_value_changed"]
 [connection signal="value_changed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/MouseSensitivity/HSlider" to="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/MouseSensitivity/HSlider" method="_on_value_changed"]
+[connection signal="text_changed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/MouseSensitivity/MouseSensitivityInput" to="." method="_on_mouse_sensitivity_input_text_changed"]
+[connection signal="pressed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Heal/HealButton" to="." method="_on_heal_button_pressed"]
+[connection signal="pressed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Dodge/DodgeButton" to="." method="_on_dodge_button_pressed"]
+[connection signal="pressed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Jump/JumpButton" to="." method="_on_jump_button_pressed"]
+[connection signal="pressed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/TargetLock/TargetLockButton" to="." method="_on_target_lock_button_pressed"]
+[connection signal="pressed" from="PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/SwitchTarget/SwitchTargetButton" to="." method="_on_switch_target_button_pressed"]
 [connection signal="pressed" from="PanelContainer3/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
