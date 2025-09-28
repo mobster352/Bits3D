@@ -1,8 +1,18 @@
-[gd_scene load_steps=7 format=3 uid="uid://2w6bnx584aff"]
+[gd_scene load_steps=10 format=3 uid="uid://2w6bnx584aff"]
 
 [ext_resource type="PackedScene" uid="uid://dewjwsx7y2v3i" path="res://scenes/levels/level.tscn" id="1_4fuxk"]
 [ext_resource type="PackedScene" uid="uid://b6e7r5twrpoh1" path="res://scenes/entities/enemies/skeleton_minion/skeleton_minion.tscn" id="2_6jifh"]
+[ext_resource type="PackedScene" uid="uid://crlbt60tl3mlr" path="res://scenes/entities/new_char/new_char.tscn" id="3_4lqi8"]
 [ext_resource type="PackedScene" uid="uid://dm0l6yxy0o7mx" path="res://scenes/vfx/pickup.tscn" id="3_xv44v"]
+[ext_resource type="Script" uid="uid://c2py5j56hriye" path="res://scenes/entities/new_char/new_char_path_follow_3d.gd" id="4_5k3o6"]
+
+[sub_resource type="Curve3D" id="Curve3D_4lqi8"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0.0123863, -0.149542, 0.00370502, 0, 0, 0, 0, 0, 0, 0.411334, -0.149542, 13.494, 0, 0, 0, 0, 0, 0, 16.499, -0.149542, 13.5241, 0, 0, 0, 0, 0, 0, 16.286, -0.149542, 0.453342),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_xv44v"]
 
@@ -20,6 +30,25 @@ transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -16.2596, 0, 0)
 [node name="Skeleton_Minion2" parent="Entities" index="2" instance=ExtResource("2_6jifh")]
 transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -17.2987, 0, -7.64657)
 
+[node name="Path3D" type="Path3D" parent="Entities" index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.58108, 0.149542, 10.4591)
+curve = SubResource("Curve3D_4lqi8")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Entities/Path3D" index="0"]
+transform = Transform3D(-0.999547, 0, -0.0295595, 0, 1, 0, 0.0295595, 0, -0.999547, 0.0123863, -0.149542, 0.00370502)
+script = ExtResource("4_5k3o6")
+
+[node name="NewChar" parent="Entities/Path3D/PathFollow3D" index="0" node_paths=PackedStringArray("pathFollow3D") instance=ExtResource("3_4lqi8")]
+transform = Transform3D(-0.749672, 0, 0.02217, 0, 0.75, 0, -0.02217, 0, -0.749672, 0.0122719, 0.149542, 0.00406933)
+pathFollow3D = NodePath("..")
+
+[node name="WaitTimer" type="Timer" parent="Entities/Path3D/PathFollow3D" index="1"]
+wait_time = 3.0
+one_shot = true
+
+[node name="NewChar" parent="Entities" index="4" instance=ExtResource("3_4lqi8")]
+transform = Transform3D(-0.446948, 0, 0.602277, 0, 0.75, 0, -0.602277, 0, -0.446948, 0, 0, -6.73422)
+
 [node name="CSGBox3D" type="CSGBox3D" parent="Environment" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.5609, -0.05, -22.9114)
 material_override = SubResource("StandardMaterial3D_4lqi8")
@@ -33,3 +62,5 @@ shape = SubResource("WorldBoundaryShape3D_xv44v")
 [node name="Pickup" parent="Environment/Items" index="0" instance=ExtResource("3_xv44v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.21926)
 item = 1
+
+[connection signal="timeout" from="Entities/Path3D/PathFollow3D/WaitTimer" to="Entities/Path3D/PathFollow3D" method="_on_wait_timer_timeout"]

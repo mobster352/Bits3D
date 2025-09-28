@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://do1jkbicnvdph"]
+[gd_scene load_steps=5 format=3 uid="uid://do1jkbicnvdph"]
 
 [ext_resource type="PackedScene" uid="uid://dewjwsx7y2v3i" path="res://scenes/levels/level.tscn" id="1_x6ivy"]
 [ext_resource type="MeshLibrary" uid="uid://c5vq6ms08qat" path="res://scenes/levels/dungeon_tiles.tres" id="2_4tcl0"]
 [ext_resource type="PackedScene" uid="uid://b6e7r5twrpoh1" path="res://scenes/entities/enemies/skeleton_minion/skeleton_minion.tscn" id="2_dd0lh"]
+[ext_resource type="PackedScene" uid="uid://0ijax3brt7ns" path="res://scenes/entities/enemies/skeleton_boss/skeleton_boss.tscn" id="3_bfxgj"]
 
 [node name="Level1" instance=ExtResource("1_x6ivy")]
 
@@ -30,11 +31,11 @@ transform = Transform3D(-1.01114, 0, -0.433125, 0, 1.1, 0, 0.433125, 0, -1.01114
 [node name="Skeleton_Minion6" parent="Entities" index="6" instance=ExtResource("2_dd0lh")]
 transform = Transform3D(-0.301466, 0, -1.05788, 0, 1.1, 0, 1.05788, 0, -0.301466, 0.340683, -0.947876, 47.6164)
 
-[node name="Skeleton_Minion8" parent="Entities" index="7" instance=ExtResource("2_dd0lh")]
-transform = Transform3D(-0.143788, 0, 1.09056, 0, 1.1, 0, -1.09056, 0, -0.143788, 39.3446, -0.947876, 47.6164)
-
-[node name="Skeleton_Minion7" parent="Entities" index="8" instance=ExtResource("2_dd0lh")]
+[node name="Skeleton_Minion7" parent="Entities" index="7" instance=ExtResource("2_dd0lh")]
 transform = Transform3D(-1.08725, 0, -0.166975, 0, 1.1, 0, 0.166975, 0, -1.08725, -11.1641, -0.947876, 59.593)
+
+[node name="Skeleton Boss" parent="Entities" index="8" instance=ExtResource("3_bfxgj")]
+transform = Transform3D(-0.00256564, 0, -0.999997, 0, 1, 0, 0.999997, 0, -0.00256564, 34.6695, -0.921838, 48.1241)
 
 [node name="FloorGrid" type="GridMap" parent="Environment" index="2"]
 mesh_library = ExtResource("2_4tcl0")

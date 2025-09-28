@@ -100,9 +100,6 @@ func update_action_input_field(action_name:String, value:String) -> void:
 		$PanelContainer/ScrollContainer/MarginContainer/VBoxContainer/Jump/Tooltip.hide()
 
 
-func _on_mouse_sensitivity_input_text_changed(new_text: String) -> void:
-	Global.save_keybinding("mouse_sensitivity", new_text)
-
 
 func _on_h_slider_value_changed(value: float) -> void:
 	Global.save_keybinding("mouse_sensitivity", value)

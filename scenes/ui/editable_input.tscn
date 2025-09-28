@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1plg7akcrwd"]
+[gd_scene load_steps=2 format=3 uid="uid://dm6pck8p0xy1y"]
 
 [ext_resource type="Script" uid="uid://b42wxmcvrh4ai" path="res://scenes/levels/editable_input.gd" id="1_h2mo5"]
 

@@ -1,0 +1,62 @@
+[gd_scene load_steps=11 format=3 uid="uid://crlbt60tl3mlr"]
+
+[ext_resource type="Script" uid="uid://cghnmvyk3i3ql" path="res://scenes/entities/new_char/new_char.gd" id="1_hkw8a"]
+[ext_resource type="PackedScene" uid="uid://c1gwpfw38g1nh" path="res://assets/blender/new_char4.glb" id="1_llgx0"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_llgx0"]
+radius = 0.559265
+height = 3.95708
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_llgx0"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hkw8a"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cs51m"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_k0t21"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7o7n6"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ig1m8"]
+states/Idle/node = SubResource("AnimationNodeAnimation_llgx0")
+states/Idle/position = Vector2(321, 100)
+states/Walk/node = SubResource("AnimationNodeAnimation_hkw8a")
+states/Walk/position = Vector2(483, 100)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_cs51m"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_k0t21"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_7o7n6")]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_cs51m"]
+graph_offset = Vector2(-318.545, 37.0586)
+nodes/MoveStateMachine/node = SubResource("AnimationNodeStateMachine_ig1m8")
+nodes/MoveStateMachine/position = Vector2(-80, 140)
+node_connections = [&"output", 0, &"MoveStateMachine"]
+
+[node name="NewChar" type="CharacterBody3D"]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
+collision_layer = 16
+script = ExtResource("1_hkw8a")
+
+[node name="Hitbox" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9602, 0)
+shape = SubResource("CapsuleShape3D_llgx0")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath("../skin")
+tree_root = SubResource("AnimationNodeBlendTree_cs51m")
+anim_player = NodePath("../skin/AnimationPlayer")
+
+[node name="skin" parent="." instance=ExtResource("1_llgx0")]
+
+[node name="Skeleton3D" parent="skin/Armature" index="0"]
+bones/1/rotation = Quaternion(0.00278542, 0.00522483, -0.00171275, 0.999981)
+bones/2/rotation = Quaternion(-9.73157e-09, -5.4235e-08, 0.928636, -0.370993)
+bones/3/rotation = Quaternion(-3.59796e-08, -8.90447e-08, -0.257146, 0.966373)
+bones/4/rotation = Quaternion(4.85644e-08, -6.71095e-08, 0.927478, 0.373878)
+bones/5/rotation = Quaternion(2.71085e-09, 3.39687e-08, 0.264753, 0.964316)
+bones/9/rotation = Quaternion(-0.700896, -5.93367e-08, -6.65009e-08, 0.713264)
+
+[editable path="skin"]
