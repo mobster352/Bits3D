@@ -37,7 +37,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.58108, 0.149542, 10.4591)
 curve = SubResource("Curve3D_4lqi8")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Entities/Path3D" index="0"]
-transform = Transform3D(-0.999538, 0, -0.0295593, 0, 1, 0, 0.0295593, 0, -0.999538, 0.0123863, -0.149542, 0.00370502)
+transform = Transform3D(-0.999537, 0, -0.0295592, 0, 1, 0, 0.0295592, 0, -0.999537, 0.0123863, -0.149542, 0.00370502)
 script = ExtResource("4_5k3o6")
 
 [node name="NewChar" parent="Entities/Path3D/PathFollow3D" index="0" node_paths=PackedStringArray("pathFollow3D") instance=ExtResource("3_4lqi8")]

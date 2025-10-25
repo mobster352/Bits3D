@@ -5,7 +5,7 @@ extends CharacterBody3D
 signal cast_spell(type:String, pos:Vector3, direction:Vector2, size:float)
 
 @onready var move_state_machine = $AnimationTree.get("parameters/MoveStateMachine/playback")
-@onready var attack_animation = $AnimationTree.get_tree_root().get_node('AttackAnimation')
+#@onready var attack_animation = $AnimationTree.get_tree_root().get_node('AttackAnimation')
 @onready var death_state_machine = $AnimationTree.get("parameters/DeathStateMachine/playback")
 @onready var player = get_tree().get_first_node_in_group('Player')
 @onready var skin = get_node('skin')

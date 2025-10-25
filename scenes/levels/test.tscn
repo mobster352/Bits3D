@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://4e3w0xet4fue"]
+[gd_scene load_steps=7 format=3 uid="uid://4e3w0xet4fue"]
 
 [ext_resource type="PackedScene" uid="uid://yg7c1gc7tui" path="res://scenes/entities/player/human.tscn" id="1_8153q"]
+[ext_resource type="PackedScene" uid="uid://b6e7r5twrpoh1" path="res://scenes/entities/enemies/skeleton_minion/skeleton_minion.tscn" id="2_52kye"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_8153q"]
 
@@ -47,3 +48,6 @@ environment = SubResource("Environment_52kye")
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 1.73321, 0)
 light_color = Color(0.832709, 0.835345, 0.834693, 1)
 shadow_enabled = true
+
+[node name="Skeleton_Minion" parent="." instance=ExtResource("2_52kye")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -0.108805, 0, -1.95926)

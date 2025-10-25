@@ -118,7 +118,7 @@ func move_logic(delta:float) -> void:
 	movement_input = dir_input.rotated(-camera.global_rotation.y)
 	var vel_2d = Vector2(velocity.x, velocity.z)
 	var is_running = Input.is_action_pressed("run") && stamina > 0.0 && enable_sprint
-	if movement_input !=  Vector2.ZERO and not dodge_timer.time_left:
+	if movement_input !=  Vector2.ZERO and not dodge_timer.time_left and not $Timers/AttackTimer.time_left:
 		var speed = run_speed if is_running else base_speed
 		speed = defend_speed if defend else speed
 		speed = backwards_speed if (dir == Vector2.DOWN or dir == VECTOR2_DOWN_LEFT or dir == VECTOR2_DOWN_RIGHT) and locked_target else speed
@@ -134,12 +134,15 @@ func move_logic(delta:float) -> void:
 			skin.set_move_state('Running')
 		else:
 			if locked_target:
-				if dir == Vector2.DOWN or dir == VECTOR2_DOWN_LEFT or dir == VECTOR2_DOWN_RIGHT:
-					skin.set_move_state('Walking_Backwards')
-				elif dir == Vector2.LEFT or dir == VECTOR2_UP_LEFT:
-					skin.set_move_state('Running_Strafe_Left')
-				elif dir == Vector2.RIGHT or dir == VECTOR2_UP_RIGHT:
-					skin.set_move_state('Running_Strafe_Right')
+				#if dir == Vector2.DOWN or dir == VECTOR2_DOWN_LEFT or dir == VECTOR2_DOWN_RIGHT:
+					#skin.set_move_state('Walking_Backwards')
+				#elif dir == Vector2.LEFT or dir == VECTOR2_UP_LEFT:
+					#skin.set_move_state('Running_Strafe_Left')
+				#elif dir == Vector2.RIGHT or dir == VECTOR2_UP_RIGHT:
+					#skin.set_move_state('Running_Strafe_Right')
+				#else:
+				if is_equipped:
+					skin.set_move_state('Sword_Walking')
 				else:
 					skin.set_move_state('Walking')
 			else:

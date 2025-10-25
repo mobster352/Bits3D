@@ -28,9 +28,23 @@ func attack(stamina:float) -> float:
 	if not attacking and not is_hit:
 		attack_state_machine.travel('sword_attack1')
 		$"../AnimationTree".set("parameters/AttackOneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+		$"../Timers/AttackTimer".start()
 		#get_parent().get_node("Sounds/SwordSound").play()
 		return stamina - 20.0
 	return stamina
 	
 func attack_toggle(value:bool) -> void:
 	attacking = value
+	
+func can_damage(value:bool):
+	$Armature/Skeleton3D/HandSlotBoneAttachment/BusterSword.can_damage = value
+
+func hit() -> void:
+	pass
+	
+func kill() -> void:
+	pass
+
+
+func _on_attack_timer_timeout() -> void:
+	attack_toggle(false)
