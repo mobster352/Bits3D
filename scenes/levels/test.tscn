@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://4e3w0xet4fue"]
+
+[ext_resource type="PackedScene" uid="uid://yg7c1gc7tui" path="res://scenes/entities/player/human.tscn" id="1_8153q"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_8153q"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8153q"]
+
+[sub_resource type="Sky" id="Sky_bfxgj"]
+sky_material = SubResource("ProceduralSkyMaterial_8153q")
+
+[sub_resource type="Environment" id="Environment_52kye"]
+background_mode = 2
+background_energy_multiplier = 0.75
+sky = SubResource("Sky_bfxgj")
+tonemap_mode = 3
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+fog_light_energy = 0.75
+fog_density = 0.001
+fog_sky_affect = 0.5
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.005
+volumetric_fog_detail_spread = 4.0
+volumetric_fog_ambient_inject = 5.0
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.197174, -0.0177612, 0.110107)
+size = Vector3(6.518, 0.001, 6.197)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="CSGBox3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0321061, 0)
+shape = SubResource("WorldBoundaryShape3D_8153q")
+
+[node name="Human" parent="." instance=ExtResource("1_8153q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.181349, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_52kye")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 1.73321, 0)
+light_color = Color(0.832709, 0.835345, 0.834693, 1)
+shadow_enabled = true

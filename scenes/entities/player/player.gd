@@ -68,6 +68,7 @@ var stamina := 100.0:
 		#if value == 100:
 			#ui.change_stamina_alpha(0.0)
 		stamina = clamp(value, 0.0, 100.0)
+		stamina = 100.0
 var is_dead := false
 var health_potions := 3:
 	set(value):
@@ -86,6 +87,14 @@ const VECTOR2_DOWN_LEFT = Vector2(-1,1)
 const VECTOR2_DOWN_RIGHT = Vector2(1,1)
 
 var is_paused := false
+
+@export var enable_jump := false
+@export var enable_attack := false
+@export var enable_defend := false
+@export var enable_dodge := false
+@export var enable_sprint := false
+
+var is_equipped := false
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MouseMode.MOUSE_MODE_CAPTURED
@@ -108,7 +117,7 @@ func move_logic(delta:float) -> void:
 	var dir = round(dir_input)
 	movement_input = dir_input.rotated(-camera.global_rotation.y)
 	var vel_2d = Vector2(velocity.x, velocity.z)
-	var is_running = Input.is_action_pressed("run") && stamina > 0.0
+	var is_running = Input.is_action_pressed("run") && stamina > 0.0 && enable_sprint
 	if movement_input !=  Vector2.ZERO and not dodge_timer.time_left:
 		var speed = run_speed if is_running else base_speed
 		speed = defend_speed if defend else speed
@@ -134,13 +143,19 @@ func move_logic(delta:float) -> void:
 				else:
 					skin.set_move_state('Walking')
 			else:
-				skin.set_move_state('Walking')
+				if is_equipped:
+					skin.set_move_state('Sword_Walking')
+				else:
+					skin.set_move_state('Walking')
 		target_angle = -movement_input.angle() + PI/2
 	else:
 		vel_2d = vel_2d.move_toward(Vector2.ZERO, base_speed * 4.0 )#* delta)
 		velocity.x = vel_2d.x
 		velocity.z = vel_2d.y
-		skin.set_move_state('Idle')
+		if is_equipped:
+			skin.set_move_state('Sword_Idle')
+		else:
+			skin.set_move_state('Idle')
 	if skin.rotation.y != target_angle:
 		skin.rotation.y = rotate_toward(skin.rotation.y, target_angle, 10 * delta)
 	if movement_input:
@@ -163,65 +178,69 @@ func move_logic(delta:float) -> void:
 			#$Sounds/StepSound.playing = true
 	#else:
 		#$Sounds/StepSound.playing = false
-		
-	if Input.is_action_just_pressed("dodge") and stamina > min_stamina and not dodge_timer.time_left:
-		stamina -= dodge_stamina
-		skin.dodge()
-		var tween = create_tween()
-		tween.set_parallel()
-		if locked_target:
-			if dir == Vector2.ZERO:
-				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == Vector2.LEFT:
-				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
-			if dir == Vector2.RIGHT:
-				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
-			if dir == Vector2.UP:
+	
+	if enable_dodge:
+		if Input.is_action_just_pressed("dodge") and stamina > min_stamina and not dodge_timer.time_left:
+			stamina -= dodge_stamina
+			skin.dodge()
+			var tween = create_tween()
+			tween.set_parallel()
+			if locked_target:
+				if dir == Vector2.ZERO:
+					tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+				if dir == Vector2.LEFT:
+					tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
+				if dir == Vector2.RIGHT:
+					tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
+				if dir == Vector2.UP:
+					tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
+				if dir == Vector2.DOWN:
+					tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+				if dir == VECTOR2_UP_LEFT:
+					tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
+					tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
+				if dir == VECTOR2_UP_LEFT:
+					tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
+					tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
+				if dir == VECTOR2_DOWN_LEFT:
+					tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
+					tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+				if dir == VECTOR2_DOWN_RIGHT:
+					tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
+					tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
+			else:
 				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == Vector2.DOWN:
-				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == VECTOR2_UP_LEFT:
-				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
-				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == VECTOR2_UP_LEFT:
-				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
-				tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == VECTOR2_DOWN_LEFT:
-				tween.tween_property(self, "velocity", skin.transform.basis.x * dodge_speed, 0.4)
-				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
-			if dir == VECTOR2_DOWN_RIGHT:
-				tween.tween_property(self, "velocity", -skin.transform.basis.x * dodge_speed, 0.4)
-				tween.tween_property(self, "velocity", -skin.transform.basis.z * dodge_speed, 0.4)
-		else:
-			tween.tween_property(self, "velocity", skin.transform.basis.z * dodge_speed, 0.4)
-		dodge_timer.start()
-		#velocity = skin.transform.basis.z * dodge_speed
+			dodge_timer.start()
+			#velocity = skin.transform.basis.z * dodge_speed
 
 func jump_logic(delta:float) -> void:
-	if is_on_floor():
-		if Input.is_action_just_pressed("jump") and stamina >= min_stamina:
-			velocity.y = -jump_velocity
-			do_squash_and_stretch(1.2, 0.15)
-			stamina -= 10.0
-	else:
-		skin.set_move_state('Jump')
+	if enable_jump:
+		if is_on_floor():
+			if Input.is_action_just_pressed("jump") and stamina >= min_stamina:
+				velocity.y = -jump_velocity
+				do_squash_and_stretch(1.2, 0.15)
+				stamina -= 10.0
+		else:
+			skin.set_move_state('Jump')
 	var gravity = jump_gravity if velocity.y > 0.0 else fall_gravity
 	velocity.y -= gravity * delta
 
 
 func ability_logic() -> void:
 	#actual attack
-	if Input.is_action_just_pressed("ability") and stamina >= min_stamina:
-		#if weapon_active:
-		stamina = skin.attack(stamina)
-		#else:
-			#if energy >= 20:
-				#skin.cast_spell()
-				#stop_movement(0.3, 0.8)
-				#energy -= 20
+	if enable_attack && is_equipped:
+		if Input.is_action_just_pressed("ability") and stamina >= min_stamina:
+			#if weapon_active:
+			stamina = skin.attack(stamina)
+			#else:
+				#if energy >= 20:
+					#skin.cast_spell()
+					#stop_movement(0.3, 0.8)
+					#energy -= 20
 	
 	#defend
-	defend = Input.is_action_pressed("block") and stamina > min_stamina
+	if enable_defend:
+		defend = Input.is_action_pressed("block") and stamina > min_stamina
 	
 	#switch weapon/magic
 	#if Input.is_action_just_pressed("switch weapon") and not skin.attacking:
@@ -238,6 +257,16 @@ func ability_logic() -> void:
 		health_potions -= 1
 		healEffect.get_node("GPUParticles3D").emitting = true
 		$Timers/HealTimer.start()
+		
+	if Input.is_action_just_pressed("equip"):
+		is_equipped = not is_equipped
+		if is_equipped:
+			$skin/Armature/Skeleton3D/HandSlotBoneAttachment.show()
+			$skin/Armature/Skeleton3D/SwordSlotBoneAttachment.hide()
+		else:
+			$skin/Armature/Skeleton3D/HandSlotBoneAttachment.hide()
+			$skin/Armature/Skeleton3D/SwordSlotBoneAttachment.show()
+		
 
 
 

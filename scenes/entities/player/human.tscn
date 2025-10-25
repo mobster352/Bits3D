@@ -1,0 +1,188 @@
+[gd_scene load_steps=29 format=3 uid="uid://yg7c1gc7tui"]
+
+[ext_resource type="Script" uid="uid://cipww6kawrowp" path="res://scenes/entities/player/player.gd" id="1_a7rq2"]
+[ext_resource type="PackedScene" uid="uid://dsaex5nrgcwcs" path="res://assets/blender/human.glb" id="1_cxddj"]
+[ext_resource type="PackedScene" uid="uid://bh7gkxhgw7roh" path="res://scenes/entities/player/camera_controller.tscn" id="3_a7rq2"]
+[ext_resource type="Script" uid="uid://dq1gewewwm1hj" path="res://scenes/entities/player/human_skin.gd" id="3_xq71h"]
+[ext_resource type="PackedScene" uid="uid://by7eelq332a0j" path="res://scenes/entities/player/ui.tscn" id="5_vp86r"]
+[ext_resource type="PackedScene" uid="uid://tfbpi1ybvvvt" path="res://scenes/entities/player/pause_menu.tscn" id="6_k14f7"]
+[ext_resource type="PackedScene" uid="uid://vneag7yqfcdc" path="res://scenes/vfx/heal_effect.tscn" id="7_qqi84"]
+[ext_resource type="PackedScene" uid="uid://t8c5tjr33epq" path="res://assets/blender/buster_sword_v1.glb" id="8_k14f7"]
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_bkbjw"]
+filter_enabled = true
+filters = [".", "Armature/Skeleton3D:body", "Armature/Skeleton3D:foot.l", "Armature/Skeleton3D:hand_slot", "Armature/Skeleton3D:head", "Armature/Skeleton3D:lowerarm.l", "Armature/Skeleton3D:lowerarm.r", "Armature/Skeleton3D:root", "Armature/Skeleton3D:upperarm.l", "Armature/Skeleton3D:upperarm.r"]
+fadein_time = 0.2
+fadeout_time = 0.2
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_aog8l"]
+animation = &"sword_attack1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mott7"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hn861"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_4gkjq"]
+states/sword_attack1/node = SubResource("AnimationNodeAnimation_aog8l")
+states/sword_attack1/position = Vector2(531, 100)
+transitions = ["Start", "sword_attack1", SubResource("AnimationNodeStateMachineTransition_mott7"), "sword_attack1", "End", SubResource("AnimationNodeStateMachineTransition_hn861")]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4n0yh"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_k14f7"]
+animation = &"sword_idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_qqi84"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_a7rq2"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ndidn"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_stuy0"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cxddj"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_aog8l"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7rafu"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_k14f7"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qqi84"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_d5l1d"]
+xfade_time = 0.2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_vp86r"]
+states/Idle/node = SubResource("AnimationNodeAnimation_4n0yh")
+states/Idle/position = Vector2(338, 100)
+states/Sword_Idle/node = SubResource("AnimationNodeAnimation_k14f7")
+states/Sword_Idle/position = Vector2(345, 183)
+states/Sword_Walking/node = SubResource("AnimationNodeAnimation_qqi84")
+states/Sword_Walking/position = Vector2(516, 183)
+states/Walking/node = SubResource("AnimationNodeAnimation_a7rq2")
+states/Walking/position = Vector2(493, 100)
+transitions = ["Idle", "Walking", SubResource("AnimationNodeStateMachineTransition_ndidn"), "Walking", "Idle", SubResource("AnimationNodeStateMachineTransition_stuy0"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_cxddj"), "Sword_Idle", "Sword_Walking", SubResource("AnimationNodeStateMachineTransition_aog8l"), "Sword_Walking", "Sword_Idle", SubResource("AnimationNodeStateMachineTransition_7rafu"), "Idle", "Sword_Idle", SubResource("AnimationNodeStateMachineTransition_k14f7"), "Sword_Idle", "Idle", SubResource("AnimationNodeStateMachineTransition_qqi84"), "Sword_Walking", "Idle", SubResource("AnimationNodeStateMachineTransition_d5l1d")]
+graph_offset = Vector2(-16, 13)
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_k14f7"]
+graph_offset = Vector2(-160.629, 87.2783)
+nodes/AttackOneShot/node = SubResource("AnimationNodeOneShot_bkbjw")
+nodes/AttackOneShot/position = Vector2(720, 120)
+nodes/AttackStateMachine/node = SubResource("AnimationNodeStateMachine_4gkjq")
+nodes/AttackStateMachine/position = Vector2(300, 340)
+nodes/MoveStateMachine/node = SubResource("AnimationNodeStateMachine_vp86r")
+nodes/MoveStateMachine/position = Vector2(-120, 120)
+nodes/output/position = Vector2(1080, 180)
+node_connections = [&"AttackOneShot", 0, &"MoveStateMachine", &"AttackOneShot", 1, &"AttackStateMachine", &"output", 0, &"AttackOneShot"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4n0yh"]
+radius = 0.206481
+height = 1.94763
+
+[node name="Human" type="CharacterBody3D"]
+collision_layer = 16
+script = ExtResource("1_a7rq2")
+enable_attack = true
+
+[node name="skin" parent="." instance=ExtResource("1_cxddj")]
+script = ExtResource("3_xq71h")
+
+[node name="Skeleton3D" parent="skin/Armature" index="0"]
+bones/0/position = Vector3(-2.35607e-11, 0.979075, -9.88209e-05)
+bones/1/rotation = Quaternion(-0.00465797, -1.07238e-14, -1.11055e-09, 0.999989)
+bones/2/rotation = Quaternion(0.13089, -1.78793e-15, 3.12066e-08, 0.991397)
+bones/4/position = Vector3(0.184712, 0.552375, -0.0330913)
+bones/4/rotation = Quaternion(-0.000841054, 0.00676863, 0.992334, -0.123398)
+bones/5/rotation = Quaternion(0.122225, -0.0017078, -0.0124634, 0.992423)
+bones/6/position = Vector3(-0.184712, 0.552375, -0.0330914)
+bones/6/rotation = Quaternion(0.000838374, 0.00676891, 0.992378, 0.123042)
+bones/7/rotation = Quaternion(0.122225, 0.00170782, 0.0124634, 0.992423)
+bones/8/rotation = Quaternion(-0.0315859, 0.742329, 0.64455, -0.180294)
+bones/9/position = Vector3(0.101701, 0.0643091, -0.0407279)
+bones/9/rotation = Quaternion(0.0653141, 0.0780143, 0.994439, -0.0271699)
+bones/9/scale = Vector3(1.00001, 1, 1.00001)
+bones/10/rotation = Quaternion(-0.18314, -0.000271022, 0.0288757, 0.982663)
+bones/11/rotation = Quaternion(0.607389, 0.0385863, -0.0743997, 0.789971)
+bones/11/scale = Vector3(1.00001, 0.999999, 0.999999)
+bones/12/position = Vector3(-0.101701, 0.0643092, -0.040728)
+bones/12/rotation = Quaternion(-0.0810913, 0.0786887, 0.993179, 0.0287801)
+bones/12/scale = Vector3(1.00001, 1, 1.00001)
+bones/13/rotation = Quaternion(-0.183143, 0.000271012, -0.0288761, 0.982662)
+bones/14/rotation = Quaternion(0.60641, -0.0527908, 0.0814871, 0.789202)
+
+[node name="SwordSlotBoneAttachment" type="BoneAttachment3D" parent="skin/Armature/Skeleton3D" index="0"]
+transform = Transform3D(1, -7.54952e-15, -2.84217e-14, 7.54952e-15, 1, 7.45058e-08, 1.42109e-14, -7.72998e-08, 1, -2.35687e-11, 1.5313, -0.204703)
+bone_name = "sword_slot"
+bone_idx = 3
+
+[node name="buster_sword_v1" parent="skin/Armature/Skeleton3D/SwordSlotBoneAttachment" instance=ExtResource("8_k14f7")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.5, 0)
+
+[node name="HandSlotBoneAttachment" type="BoneAttachment3D" parent="skin/Armature/Skeleton3D" index="1"]
+transform = Transform3D(0.982282, -0.16205, 0.0941371, 0.115041, 0.124851, -0.985484, 0.147944, 0.978852, 0.141281, -0.321745, 0.809377, 0.107176)
+visible = false
+bone_name = "hand_slot"
+bone_idx = 8
+
+[node name="buster_sword_v1" parent="skin/Armature/Skeleton3D/HandSlotBoneAttachment" instance=ExtResource("8_k14f7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.16416e-10, -0.269564, -1.30385e-08)
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath("../skin")
+tree_root = SubResource("AnimationNodeBlendTree_k14f7")
+anim_player = NodePath("../skin/AnimationPlayer")
+parameters/AttackOneShot/active = false
+parameters/AttackOneShot/internal_active = false
+parameters/AttackOneShot/request = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.944162, 0)
+shape = SubResource("CapsuleShape3D_4n0yh")
+
+[node name="CameraController" parent="." instance=ExtResource("3_a7rq2")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2, 0)
+spring_length = 4.0
+min_limit_x = -1.3
+max_limit_x = 0.5
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="StaminaRecoveryTimer" type="Timer" parent="Timers"]
+wait_time = 0.15
+autostart = true
+
+[node name="InvulTimer" type="Timer" parent="Timers"]
+wait_time = 0.8
+one_shot = true
+
+[node name="DodgeTimer" type="Timer" parent="Timers"]
+wait_time = 0.4
+one_shot = true
+
+[node name="HealTimer" type="Timer" parent="Timers"]
+one_shot = true
+
+[node name="UI" parent="." instance=ExtResource("5_vp86r")]
+show_stamina = false
+
+[node name="PauseMenu" parent="." instance=ExtResource("6_k14f7")]
+process_mode = 2
+visible = false
+
+[node name="HealEffect" parent="." instance=ExtResource("7_qqi84")]
+
+[editable path="skin"]

@@ -10,8 +10,14 @@ extends Control
 #var fire_texture = preload("res://graphics/ui/fire.png")
 #var heal_texture = preload("res://graphics/ui/heal.png")
 
+@export var show_stamina := true
+
 func _ready() -> void:
 	Global.update_keybinding.connect(_on_update_keybinding)
+	if show_stamina:
+		$Stamina.show()
+	else:
+		$Stamina.hide()
 
 #func setup(value:int) -> void:
 	#for i in value:

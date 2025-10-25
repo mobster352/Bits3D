@@ -1,11 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://crlbt60tl3mlr"]
+[gd_scene load_steps=11 format=3 uid="uid://3a1dgneg66xt"]
 
-[ext_resource type="Script" uid="uid://cghnmvyk3i3ql" path="res://scenes/entities/new_char/new_char.gd" id="1_hkw8a"]
-[ext_resource type="PackedScene" uid="uid://c1gwpfw38g1nh" path="res://assets/blender/new_char4.glb" id="1_llgx0"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_llgx0"]
-radius = 0.559265
-height = 3.95708
+[ext_resource type="Script" uid="uid://cghnmvyk3i3ql" path="res://scenes/entities/new_char/new_char.gd" id="1_536bn"]
+[ext_resource type="PackedScene" uid="uid://bocuktd68kml6" path="res://scenes/entities/sus/sus.glb" id="1_f7gpy"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_llgx0"]
 animation = &"Idle"
@@ -29,34 +25,33 @@ states/Walk/node = SubResource("AnimationNodeAnimation_hkw8a")
 states/Walk/position = Vector2(483, 100)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_cs51m"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_k0t21"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_7o7n6")]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_cs51m"]
-graph_offset = Vector2(-292, 34)
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_536bn"]
+graph_offset = Vector2(-341.306, 35.6306)
 nodes/MoveStateMachine/node = SubResource("AnimationNodeStateMachine_ig1m8")
 nodes/MoveStateMachine/position = Vector2(-80, 140)
 node_connections = [&"output", 0, &"MoveStateMachine"]
 
-[node name="NewChar" type="CharacterBody3D"]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
-collision_layer = 16
-script = ExtResource("1_hkw8a")
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_24dqv"]
+radius = 0.789953
+height = 2.74855
 
-[node name="Hitbox" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9602, 0)
-shape = SubResource("CapsuleShape3D_llgx0")
+[node name="Sus" type="CharacterBody3D"]
+collision_layer = 16
+script = ExtResource("1_536bn")
+
+[node name="skin" parent="." instance=ExtResource("1_f7gpy")]
+
+[node name="Skeleton3D" parent="skin/Armature" index="0"]
+bones/4/rotation = Quaternion(8.85098e-08, -1.41895e-07, 0.707107, 0.707107)
+bones/6/rotation = Quaternion(-0.707107, -1.12382e-08, 4.21468e-08, 0.707107)
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
 root_node = NodePath("../skin")
-tree_root = SubResource("AnimationNodeBlendTree_cs51m")
+tree_root = SubResource("AnimationNodeBlendTree_536bn")
 anim_player = NodePath("../skin/AnimationPlayer")
 
-[node name="skin" parent="." instance=ExtResource("1_llgx0")]
-
-[node name="Skeleton3D" parent="skin/Armature" index="0"]
-bones/1/rotation = Quaternion(0.00278542, 0.00522483, -0.00171275, 0.999981)
-bones/2/rotation = Quaternion(-9.33588e-09, -5.42947e-08, 0.931194, -0.364524)
-bones/3/rotation = Quaternion(-3.61314e-08, -8.95621e-08, -0.251756, 0.967791)
-bones/4/rotation = Quaternion(4.81252e-08, -6.74045e-08, 0.929795, 0.368078)
-bones/5/rotation = Quaternion(2.51207e-09, 3.40875e-08, 0.257762, 0.966209)
-bones/9/rotation = Quaternion(-0.700896, -5.93367e-08, -6.65009e-08, 0.713264)
+[node name="Hitbox" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36774, 0)
+shape = SubResource("CapsuleShape3D_24dqv")
 
 [editable path="skin"]

@@ -4,16 +4,13 @@
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dd0lh"]
 
-[sub_resource type="Sky" id="Sky_bfxgj"]
+[sub_resource type="Sky" id="Sky_377w7"]
 sky_material = SubResource("ProceduralSkyMaterial_dd0lh")
 
 [sub_resource type="Environment" id="Environment_377w7"]
 background_mode = 2
 background_energy_multiplier = 0.75
-sky = SubResource("Sky_bfxgj")
-ambient_light_source = 2
-ambient_light_color = Color(0.439216, 0.439216, 0.439216, 1)
-reflected_light_source = 1
+sky = SubResource("Sky_377w7")
 tonemap_mode = 3
 ssr_enabled = true
 ssao_enabled = true
@@ -32,8 +29,8 @@ volumetric_fog_ambient_inject = 5.0
 environment = SubResource("Environment_377w7")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
-light_color = Color(0.834614, 0.834614, 0.834614, 1)
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 1.73321, 0)
+light_color = Color(0.832709, 0.835345, 0.834693, 1)
 shadow_enabled = true
 
 [node name="Entities" type="Node3D" parent="."]
